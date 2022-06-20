@@ -1,0 +1,64 @@
+#!/bin/zsh
+# has a bug in which when choosing action on all function "choise()" acts twice
+# find which time the function determins the action
+# if its the first one find out why second is triggerred
+# if second find if it overrites the first or if for_one acts first
+
+function choise() {
+
+	action=$(printf "start\\nstop\\nremove" | dmenu -p "use trem to $count: ")
+
+	[ -z "$action" ] && exit 1;
+
+
+
+	case $action in
+		"remove") action="-r";;
+		"stop") action="-S";;
+		"start") action="-s";;
+		*) exit;;
+	esac
+
+	echo $action;
+}
+
+function for_all() {
+
+	action=$(choise);
+
+	first=`grep -o "^\s*[0-9]" <<< "$list" | sed 's/ //g' | head -1`
+	last=`grep -o "^\s*[0-9]" <<< "$list" | sed 's/ //g' | tail -1`
+	id="$first-$last"
+
+	transmission-remote -t $id $action
+
+	exit 1;
+
+}
+
+function for_one(){
+
+	#get ids from what_to_do
+
+	ids=$(echo "$torrents" | paste -sd, -)
+
+	action=$(choise);
+
+	transmission-remote -t $ids $action
+
+	exit 1;
+
+}
+
+
+
+all="      ACTION ON ALL"
+list=$(transmission-remote -l | tail -n +2 | head -n -1)
+
+what_to_do=$(echo "$all\\n$list" | dmenu -i -l 20);
+
+[ -z $what_to_do ] && exit 1;
+
+torrents="$(for i in "${what_to_do[@]}"; do [ $i = $all ] && for_all ; grep -oP '^\s*[0-9]' <<< "$i" | sed 's/ //g'  ; done)"
+
+for_one
