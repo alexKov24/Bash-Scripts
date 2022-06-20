@@ -12,3 +12,20 @@ dependemcies: dmenu, transmission-remote
 
 on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
 downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
+
+--------------------------------------------
+
+brightness # unused
+
+dependencies: xrandr
+
+changes brightness of connected screen. brightness + (adds) brightness - (subtracts)
+
+--------------------------------------------
+
+
+wifi-dmenu # unused
+
+dependencies: nmcli, dmenu
+
+loads avaliable wifi networks for you to connect to
