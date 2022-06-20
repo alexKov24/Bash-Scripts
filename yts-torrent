@@ -1,0 +1,46 @@
+#!/bin/zsh
+#
+#base_link="https://yts.mx/browse-movies/"
+#
+#quality=$( printf "all\\n480p\\n720p\\n1080p\\n2160p\\n3D" | dmenu -i -l 20)
+#
+#gener=$( printf "all\\naction\\nadventure\\nanimation\\nbiography\\ncomedy\\ncrime\\ndocumentary\\ndrama\\nfamily\\nfantasy\\nfilm-noir\\ngame-show\\nhistory\\nhorror\\nmusic\\nmusical\\nmystery\\nnews\\nreality-tv\\nromance\\nsci-fi\\nsport\\ntalk-show\\nthriller\\nwar\\nwestern" | dmenu -i -l 20)
+#
+#rating=$( printf "0\\n1\\n2\\n3\\n4\\n5\\n6\\n7\\n8\\n9\\n" | dmenu -i -l 20)
+#
+#year=$( printf "0\\n2022\\n2021\\n2020\\n2019\\n2015-2018\\n2010-2014\\n2000-2009\\n1990-1999\\n1980-1989\\n1970-1979\\n1950-1969\\n1900-1949\\n" | dmenu -i -l 20)
+#
+#order=$( printf "latest\\noldest\\nfeatured\\nseeds\\npeers\\nyear\\nrating\\nlikes\\nrt_audience\\nalphabetical\\ndownloads\\n" | demu -i -l 20)
+#
+#link="$base_link/0/$quality/$gener/$rating/$order/$year/all"
+link="https://yts.mx/browse-movies/0/2160p/action/6/downloads/2022/en"
+lines=$(curl "$link" | grep 'browse-movie-title')
+
+flag=""
+
+while [ -z $flag]
+
+do
+
+	movie_link=$(echo $lines | grep "$(echo $lines | sed 's/.*">//;s|</a>||g' | dmenu -i -l 20)" | sed 's/.*href="//g;s/" .*//g' ) ; [ -z $movie_link ] && exit 1;
+
+
+	movie_action=$(echo "trailer\\ndownload" | dmenu -i -l 20) ; [ -z $movie_action ] && exit;
+
+
+	if [ $movie_action = "trailer" ]
+		then
+			curl $movie_link | grep "youtube" | sed 's/.*href="//g;s/;border.*//g' | xargs -I "{}" $BROWSER {}
+			movie_action=$(echo "back\\ndownload" | dmenu -i -l 20)
+	fi
+
+	[ $movie_action = "dwonload"] && falg="download"
+
+done
+
+
+movie_lines=$(curl $movie_link | grep '^<a href="https://yts.mx/torrent/download.*span')
+
+down_link=$(echo $movie_lines | grep "$(echo $movie_lines | sed 's/.*span>//;s|</a>||g' | dmenu -i -l 20)" | sed 's/.*href="//g;s/" .*//g')
+
+transmission-remote -a $down_link

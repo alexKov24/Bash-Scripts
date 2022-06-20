@@ -3,3 +3,12 @@ trem-dmenuselect
 dependencies: dmenu, transmission-remote, zsh
 
 on run presents a dmenu selection of running torrents, which can be selected for further action (stop, start, remove).
+
+--------------------------------------------
+
+yts-torrent # early build
+
+dependemcies: dmenu, transmission-remote
+
+on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
+downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
