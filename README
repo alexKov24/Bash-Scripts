@@ -1,0 +1,5 @@
+trem-dmenuselect
+
+dependencies: dmenu, transmission-remote, zsh
+
+on run presents a dmenu selection of running torrents, which can be selected for further action (stop, start, remove).
