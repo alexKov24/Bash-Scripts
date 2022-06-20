@@ -1,8 +1,4 @@
 #!/bin/zsh
-# has a bug in which when choosing action on all function "choise()" acts twice
-# find which time the function determins the action
-# if its the first one find out why second is triggerred
-# if second find if it overrites the first or if for_one acts first
 
 function choise() {
 
