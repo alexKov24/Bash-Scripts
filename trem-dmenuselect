@@ -73,14 +73,3 @@ is=$(grep '^\s*ACTION' <<< ${what_to_do[@]})
  		done
 
 )" && for_one;
-
-# bug is here
-# torrents="$(
-# 		for i in "${what_to_do[@]}";
-# 		do [ $i = $all ] && for_all ;		 # if there is $all among selection, run for_all
-# 		grep -oP '^\s*[0-9]' <<< "$i" |		 # for each chosen torrent get its id
-# 		sed 's/ //g'  ;
-# 		done
-# 	)"
-
-# for_one
