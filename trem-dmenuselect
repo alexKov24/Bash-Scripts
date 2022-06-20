@@ -26,13 +26,15 @@ function for_all() {
 
 	action=$(choise);
 
-	first=`grep -o "^\s*[0-9]" <<< "$list" | sed 's/ //g' | head -1`
-	last=`grep -o "^\s*[0-9]" <<< "$list" | sed 's/ //g' | tail -1`
+	first=`grep -Eo "^\s*[0-9]+" <<< "$list" | sed 's/ //g' | head -1`
+	last=`grep -Eo "^\s*[0-9]+" <<< "$list" | sed 's/ //g' | tail -1`
 	id="$first-$last"
 
 
 	# example - transmission-remote -t 1-5 -r
 	transmission-remote -t $id $action
+
+	echo "-t $id $action"
 
 	exit 1;
 
@@ -45,6 +47,7 @@ function for_one(){
 	action=$(choise);
 
 	# example - transmission-remote -t 1,3,7 -S
+	echo "-t $ids $action"
 	transmission-remote -t $ids $action
 
 	exit 1;
@@ -61,14 +64,23 @@ what_to_do=$(echo "$all\\n$list" | dmenu -i -l 20);      # selecting torrents to
 
 [ -z $what_to_do ] && exit 1;
 
+is=$(grep '^\s*ACTION' <<< ${what_to_do[@]})
+[ ! -z $is ] && for_all || torrents="$(
+ 		for i in "${what_to_do[@]}";
+		do
+	 		grep -oP '^\s*[0-9]' <<< "$i" |		 # for each chosen torrent get its id
+	 		sed 's/ //g'  ;
+ 		done
+
+)" && for_one;
 
 # bug is here
-torrents="$(
-		for i in "${what_to_do[@]}";
-		do [ $i = $all ] && for_all ;		 # if there is $all among selection, run for_all
-		grep -oP '^\s*[0-9]' <<< "$i" |		 # for each chosen torrent get its id
-		sed 's/ //g'  ;
-		done
-	)"
+# torrents="$(
+# 		for i in "${what_to_do[@]}";
+# 		do [ $i = $all ] && for_all ;		 # if there is $all among selection, run for_all
+# 		grep -oP '^\s*[0-9]' <<< "$i" |		 # for each chosen torrent get its id
+# 		sed 's/ //g'  ;
+# 		done
+# 	)"
 
-for_one
+# for_one
