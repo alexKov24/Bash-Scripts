@@ -64,7 +64,7 @@ is=$(grep '^\s*ACTION' <<< ${what_to_do[@]})
 [ ! -z $is ] && for_all || torrents="$(
  		for i in "${what_to_do[@]}";
 		do
-	 		grep -oP '^\s*[0-9]' <<< "$i" |		 # for each chosen torrent get its id
+	 		grep -oP '^\s*[0-9]+' <<< "$i" |		 # for each chosen torrent get its id
 	 		sed 's/ //g'  ;
  		done
 
