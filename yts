@@ -105,9 +105,13 @@ prepare_select_fetch () {
 	clear
 
 	# adding -B 2 after grep would also includes name and file size should also include format (WEB BlueRay etc)
-	movie_data=($( curl -s $movie_link | grep -B 2 "magnet:?xt=urn:btih:[^']"));
-	movie_data_magnets=($( echo ${movie_data[@]} | grep "magnet:?xt=urn:btih:" ));
-	movie_data_sizes=($( echo ${movie_data[@]} |  grep "quality-size" ));
+	movie_data=$( curl -s $movie_link | grep -B 2 "magnet:?xt=urn:btih:[^']");
+	movie_data_magnets=($( echo "$movie_data" | grep "magnet:?xt=urn:btih:" ));
+	movie_data_sizes=($( echo "$movie_data" |  grep "quality-size" ));
+
+
+
+
 
 	for i in "${!movie_data_magnets[@]}"; do
 		movie_magnets[$i]="$(sed 's/.*href=\"//;s/\".*//' <<< "${movie_data_magnets[$i]}")"
@@ -126,26 +130,25 @@ prepare_select_fetch () {
 }
 
 select_fetch() {
-
+	clear
     if (( down_count > 1 )); then
-        printf "\n"
-        prompt "Select movie (1-${down_count}): " "selected_movie_num"
+	printf "\n"
+	prompt "Select movie (1-${down_count}): " "selected_movie_num"
     else
-        print_msg "Selected '${movie_sizes[0]}'"
-        selected_movie_num=1
+	print_msg "Selected '${movie_sizes[0]}'"
+	selected_movie_num=1
     fi
 
     if check_number_input "${down_count}" "${selected_movie_num}"; then
 	    select_fetch
     else
-        the_magnet="${movie_magnets[${selected_movie_num} - 1]}"
-        the_name="${movie_sizes[${selected_movie_num} - 1]}"
+	the_magnet="${movie_magnets[${selected_movie_num} - 1]}"
+	the_name="${movie_sizes[${selected_movie_num} - 1]}"
 	fetch
     fi
 }
 
 fetch () {
-	echo "fetching on magnet $the_magnet"
 	transmission-remote -a $the_magnet
 }
 
