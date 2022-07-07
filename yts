@@ -1,0 +1,181 @@
+#!/usr/bin/env bash
+
+# NAME:		yts-torrent.sh
+# DESCRIPTION:	terminal based movie scraper
+# VERSION:	0.1a
+
+IFS=$'\n'
+red="\033[1;31m"
+green="\033[1;32m"
+blue="\033[1;34m"
+white="\033[1;37m"
+default="\033[0m"
+
+search_url="https://yts.mx/browse-movies/0/all/all/5/seeds/2022/en"
+
+
+
+print_msg() {
+    printf "${blue}::${white} %s${default}\n" "${*}"
+}
+
+print_error() {
+    printf " ${red}->${default} %s\n" "${*}" >&2
+}
+
+print_list_item() {
+    printf "${blue}%s${default} %s\n" "[${1}]" "${2}"
+}
+
+prompt() {
+    printf "${green}==>${white} %s${default}" "${1}" && read -r "${2}"
+}
+
+setYear() {
+	prompt "change year to " "searchkey"
+	print_msg "year changed to '${searchkey}'"
+}
+
+# setGaner() {
+# }
+
+# setLanguage() {
+# }
+
+# setOrder() {
+# }
+
+# setRating() {
+# }
+
+# setSearchValue() {
+# }
+check_number_input() {
+    local max_num="${1:--1}"
+    local input_num="${2:--1}"
+
+    if (( input_num >= 1 )) && (( input_num <= max_num )); then
+        return 1
+    else
+        print_error "Invalid selection"
+        return 0
+    fi
+}
+
+searchInYTS() {
+
+	movie_list=($(curl -s "${search_url}" | grep "^<a\ href=\"https://yts.mx/movies/.*<\/a>"));
+
+	for i in "${!movie_list[@]}"; do
+		movie_name_list[$i]="$(sed 's/^.*\">//;s/<.*//' <<< "${movie_list[$i]}")"
+	done
+
+	for i in "${!movie_list[@]}"; do
+		movie_link_list[$i]="$(sed 's/.*href=\"//;s/"\ .*//' <<< "${movie_list[$i]}")"
+	done
+
+    	movie_list_size="${#movie_list[@]}"
+        for ((i = 1; i < $movie_list_size + 1; i++)); do
+            print_list_item "${i}" "${movie_name_list[${i} - 1]}"
+        done
+	select_movie
+}
+
+select_movie() {
+
+    if (( movie_list_size > 1 )); then
+        printf "\n"
+        prompt "Select movie (1-${movie_list_size}): " "selected_movie_num"
+    else
+        print_msg "Selected '${movie_name_list[0]}'"
+        selected_movie_num=1
+    fi
+
+    if check_number_input "${movie_list_size}" "${selected_movie_num}"; then
+        select_movie
+    else
+        movie_link="${movie_link_list[${selected_movie_num} - 1]}"
+        movie_name="${movie_name_list[${selected_movie_num} - 1]}"
+	prepare_select_fetch
+    fi
+}
+
+prepare_select_fetch () {
+	clear
+
+	# adding -B 2 after grep would also includes name and file size should also include format (WEB BlueRay etc)
+	movie_data=($( curl -s 'https://yts.mx/movies/the-batman-2022' | grep -B 2 "magnet:?xt=urn:btih:[^']"));
+	movie_data_magnets=($( echo ${movie_data[@]} | grep "magnet:?xt=urn:btih:" ));
+	movie_data_sizes=($( echo ${movie_data[@]} |  grep "quality-size" ));
+
+	for i in "${!movie_data_magnets[@]}"; do
+		movie_magnets[$i]="$(sed 's/.*href=\"//;s/\".*//' <<< "${movie_data_magnets[$i]}")"
+	done
+
+	for i in "${!movie_data_sizes[@]}"; do
+		movie_sizes[$i]="$(sed 's/.*quality-size\">//;s/<.*//' <<< "${movie_data_sizes[$i]}")"
+	done
+
+	down_count="${#movie_data_sizes[@]}"
+        for ((i = 1; i < $down_count+ 1; i++)); do
+            print_list_item "${i}" "$movie_name ${movie_sizes[${i} - 1]}"
+        done
+
+	select_fetch
+}
+
+select_fetch() {
+
+    if (( down_count > 1 )); then
+        printf "\n"
+        prompt "Select movie (1-${down_count}): " "selected_movie_num"
+    else
+        print_msg "Selected '${movie_sizes[0]}'"
+        selected_movie_num=1
+    fi
+
+    if check_number_input "${down_count}" "${selected_movie_num}"; then
+	    select_fetch
+    else
+        the_magnet="${movie_magnets[${selected_movie_num} - 1]}"
+        the_name="${movie_sizes[${selected_movie_num} - 1]}"
+	fetch
+    fi
+}
+
+fetch () {
+	echo "fetching on magnet $the_magnet"
+	transmission-remote -a $the_magnet
+}
+
+print_nav_menu() {
+    clear
+    print_list_item "F" "Fresh Search"
+    print_list_item "S" "Default Search"
+
+    print_list_item "Y" "Change Year"
+    print_list_item "G" "Change Gener"
+    print_list_item "L" "Change Language"
+    print_list_item "O" "Change Order"
+    print_list_item "R" "Change rating"
+
+    print_list_item "Q" "Exit"
+
+    printf "\n"
+    prompt "" "user_input"
+    clear
+
+    case "${user_input,}" in
+        f) searchInYTS ;;
+        s) searchInYTS;;
+        y) setYear;;
+        g) setGaner;;
+        l) setLanguage;;
+        o) setOrder;;
+        r) setRating;;
+        q) exit 0 ;;
+        *) print_nav_menu ;;
+    esac
+}
+
+print_nav_menu

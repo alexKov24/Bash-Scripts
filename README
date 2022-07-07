@@ -6,12 +6,20 @@ on run presents a dmenu selection of running torrents, which can be selected for
 
 --------------------------------------------
 
-yts-torrent # early build
+yts-torrent # changed to yts
 
 dependemcies: dmenu, transmission-remote
 
 on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
 downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
+
+--------------------------------------------
+
+yts # v0.1a
+
+dependencies: curl, transmission-remote-cli
+
+terminal based torrent search script
 
 --------------------------------------------
 
