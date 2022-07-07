@@ -37,20 +37,25 @@ setYear() {
 	print_msg "year changed to '${searchkey}'"
 }
 
-# setGaner() {
-# }
+setGaner() {
+	print_nav_menu
+}
 
-# setLanguage() {
-# }
+setLanguage() {
+	print_nav_menu
+}
 
-# setOrder() {
-# }
+setOrder() {
+	print_nav_menu
+}
 
-# setRating() {
-# }
+setRating() {
+	print_nav_menu
+}
 
-# setSearchValue() {
-# }
+setSearchValue() {
+	print_nav_menu
+}
 check_number_input() {
     local max_num="${1:--1}"
     local input_num="${2:--1}"
