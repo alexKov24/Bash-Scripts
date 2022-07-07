@@ -3,6 +3,7 @@
 # NAME:		yts-torrent.sh
 # DESCRIPTION:	terminal based movie scraper
 # VERSION:	0.1a
+# BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
 IFS=$'\n'
 red="\033[1;31m"

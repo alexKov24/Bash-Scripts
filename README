@@ -20,6 +20,7 @@ yts # v0.1a
 dependencies: curl, transmission-remote-cli
 
 terminal based torrent search script
+BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
 --------------------------------------------
 
