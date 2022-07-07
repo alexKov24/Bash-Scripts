@@ -15,7 +15,7 @@ downloaded or their trailer watched through default browser ($BROWSER) (might be
 
 --------------------------------------------
 
-yts # v0.1a
+yts # v0.1b
 
 dependencies: curl, transmission-remote-cli
 
