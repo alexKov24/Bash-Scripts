@@ -69,6 +69,7 @@ check_number_input() {
 }
 
 searchInYTS() {
+	clear
 
 	movie_list=($(curl -s "${search_url}" | grep "^<a\ href=\"https://yts.mx/movies/.*<\/a>"));
 
@@ -98,24 +99,21 @@ select_movie() {
     fi
 
     if check_number_input "${movie_list_size}" "${selected_movie_num}"; then
-        select_movie
+	    searchInYTS
     else
         movie_link="${movie_link_list[${selected_movie_num} - 1]}"
         movie_name="${movie_name_list[${selected_movie_num} - 1]}"
-	prepare_select_fetch
+	searching_torrent
     fi
 }
 
-prepare_select_fetch () {
+searching_torrent () {
 	clear
 
 	# adding -B 2 after grep would also includes name and file size should also include format (WEB BlueRay etc)
 	movie_data=$( curl -s $movie_link | grep -B 2 "magnet:?xt=urn:btih:[^']");
 	movie_data_magnets=($( echo "$movie_data" | grep "magnet:?xt=urn:btih:" ));
 	movie_data_sizes=($( echo "$movie_data" |  grep "quality-size" ));
-
-
-
 
 
 	for i in "${!movie_data_magnets[@]}"; do
@@ -135,7 +133,7 @@ prepare_select_fetch () {
 }
 
 select_fetch() {
-	clear
+
     if (( down_count > 1 )); then
 	printf "\n"
 	prompt "Select movie (1-${down_count}): " "selected_movie_num"
@@ -145,7 +143,7 @@ select_fetch() {
     fi
 
     if check_number_input "${down_count}" "${selected_movie_num}"; then
-	    select_fetch
+	   searching_torrent
     else
 	the_magnet="${movie_magnets[${selected_movie_num} - 1]}"
 	the_name="${movie_sizes[${selected_movie_num} - 1]}"
