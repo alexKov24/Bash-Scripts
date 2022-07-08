@@ -2,7 +2,7 @@
 
 # NAME:		yts-torrent.sh
 # DESCRIPTION:	terminal based movie scraper
-# VERSION:	0.1a
+# VERSION:	0.2b
 # BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
 
@@ -230,7 +230,7 @@ print_nav_menu() {
     transmission-daemon
     clear
     echo $search_url
-    print_list_item "F" "Fresh Search"
+    # print_list_item "F" "Fresh Search"
     print_list_item "S" "Default Search"
 
     print_list_item "Y" "Change Year"
@@ -246,7 +246,7 @@ print_nav_menu() {
     clear
 
     case "${user_input,}" in
-        f) searchInYTS ;;
+        # f) searchInYTS ;;
         s) searchInYTS;;
         y) choose setYear ${year[@]};;
         g) choose setGaner ${ganer[@]};;
