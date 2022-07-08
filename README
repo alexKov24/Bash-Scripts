@@ -15,12 +15,15 @@ downloaded or their trailer watched through default browser ($BROWSER) (might be
 
 --------------------------------------------
 
-yts # v0.1b
+yts # v0.2b
 
 dependencies: curl, transmission-remote-cli
 
-terminal based torrent search script
+terminal based torrent search script. Now able to chagne search values (Date, rating, sort)
 BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
+
+BUGS: changing language requires additional tweaking. Currently makes all movie names look like selected language.
+Otherwise still works.
 
 --------------------------------------------
 

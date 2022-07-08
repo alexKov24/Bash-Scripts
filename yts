@@ -5,6 +5,19 @@
 # VERSION:	0.1a
 # BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
+
+
+##################
+# DEFAULT VALUES #
+##################
+quality=( "all" "480p" "720p" "1080p" "2160p" "3D");
+ganer=( "all" "action" "adventure" "animation" "biography" "comedy" "crime" "documentary" "drama" "family" "fantasy" "film-noir" "game-show" "history" "horror" "music" "musical" "mystery" "news" "reality-tv" "romance" "sci-fi" "sport" "talk-show" "thriller" "war" "western");
+rating=( "0" "9" "8" "7" "6" "5" "4" "3" "2" "1");
+year=( "0" "2022" "2021" "2020" "2019" "2015-2018" "2010-2014" "2000-2009" "1990-1999" "1980-1989" "1970-1979" "1950-1969" "1900-1949" );
+language=( "en" "fr" "ja" "it" "es" "de" "zh" "ko" "cn" "hi" "ru" "sv" "pt" "pl" "th" "da" "nl" "no" "vi" "ta" "fi" "cs" "te" "tr" "ar" "id" "hu" "fa" "el" "tl" "he" "uk" "et" "ro" "bn" "ur" "ml" "ms" "is" "ca" "sk" "xx" "sr" "pa" "ka" "wo" "kn" "af" "eu" "mr" "lv" "am" "bo" "sh" "mk" "gl" "sw" "bs" "ak" "ps" "lt" "hy" "la" "st" "mn" "zu" "hr" "yue" "be" "ig" "ku" "cy" "mt" "kk" "sl" "sq" "yo" "cmn" "lg" "iu" "so" "ab" "az" "ht" "ky" "lb" "ga" "km" "mi" "aa" "yi" "nb" "os");
+order_by=( "latest" "oldest" "featured" "seeds" "peers" "year" "rating" "likes" "rt_audience" "alphabetical" "downloads");
+
+
 IFS=$'\n'
 red="\033[1;31m"
 green="\033[1;32m"
@@ -12,9 +25,12 @@ blue="\033[1;34m"
 white="\033[1;37m"
 default="\033[0m"
 
-search_url="https://yts.mx/browse-movies/0/all/all/5/seeds/2022/en"
+search_string="0"
+search_url="https://yts.mx/browse-movies/$search_string/${quality[0]}/${ganer[0]}/${rating[5]}/${order_by[3]}/${year[1]}/${language[0]}"
 
-
+######################
+# DEFAULT VALUES END #
+######################
 
 print_msg() {
     printf "${blue}::${white} %s${default}\n" "${*}"
@@ -32,30 +48,44 @@ prompt() {
     printf "${green}==>${white} %s${default}" "${1}" && read -r "${2}"
 }
 
-setYear() {
-	prompt "change year to " "searchkey"
-	print_msg "year changed to '${searchkey}'"
+# TODO : create a uniform fuction for setters with input for array and value
+
+setSearchValue() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/$1|3")"
+	print_nav_menu
+}
+
+setQuality() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${quality[$1]}|4")"
+	print_nav_menu
 }
 
 setGaner() {
-	print_nav_menu
-}
-
-setLanguage() {
-	print_nav_menu
-}
-
-setOrder() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${ganer[$1]}|5")"
 	print_nav_menu
 }
 
 setRating() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${rating[$1]}|6")"
 	print_nav_menu
 }
 
-setSearchValue() {
+setOrder() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${order_by[$1]}|7")"
 	print_nav_menu
 }
+
+setYear() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${year[$1]}|8")"
+	print_nav_menu
+}
+
+setLanguage() {
+	search_url="$( echo $search_url | sed "s|/.[^/]*|/${language[$1]}|9")"
+	print_nav_menu
+}
+
+
 check_number_input() {
     local max_num="${1:--1}"
     local input_num="${2:--1}"
@@ -155,14 +185,57 @@ fetch () {
 	transmission-remote -a $the_magnet
 }
 
+# choose error_func success_func array
+choose () (
+
+	# retrive data
+	arr=($@);
+	# seperate to array and function
+	# error_func="${arr[1]}"
+	success_func="${arr[0]}"
+	arr=( "${arr[@]/$success_func}" )
+	# arr=( "${arr[@]/$error_func}" )
+	# function
+	# $@
+	# pring array
+	# echo ${arr[@]}
+
+	arr_length="${#arr[@]}"
+        for ((i = 0; i < $arr_length - 1 ; i++)); do
+            arr[$i]="${arr[ $i +1 ]}"
+        done
+	arr_length="${#arr[@]}"
+        for ((i = 1; i < $arr_length + 1  ; i++)); do
+            print_list_item "${i}" "${arr[${i} - 1]}"
+        done
+
+	if (( arr_length > 1 )); then
+		printf "\n"
+		prompt "Plese select (1-${arr_length}): " "selected_num"
+	else
+		print_msg "Selected '${arr[0]}'"
+		selected_num=1
+	fi
+
+	if check_number_input "${arr_length}" "${selected_num}"; then
+		$choose success_func arr
+	else
+		$success_func "$selected_num - 1"
+		echo " selected_num - 1 "
+	fi
+
+)
+
 print_nav_menu() {
+    transmission-daemon
     clear
+    echo $search_url
     print_list_item "F" "Fresh Search"
     print_list_item "S" "Default Search"
 
     print_list_item "Y" "Change Year"
     print_list_item "G" "Change Gener"
-    print_list_item "L" "Change Language"
+    # print_list_item "L" "Change Language"
     print_list_item "O" "Change Order"
     print_list_item "R" "Change rating"
 
@@ -175,11 +248,11 @@ print_nav_menu() {
     case "${user_input,}" in
         f) searchInYTS ;;
         s) searchInYTS;;
-        y) setYear;;
-        g) setGaner;;
-        l) setLanguage;;
-        o) setOrder;;
-        r) setRating;;
+        y) choose setYear ${year[@]};;
+        g) choose setGaner ${ganer[@]};;
+        # l) choose setLanguage ${language[@]};;
+        o) choose setOrder ${order_by[@]};;
+        r) choose setRating ${rating[@]};;
         q) exit 0 ;;
         *) print_nav_menu ;;
     esac
