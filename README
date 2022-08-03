@@ -1,3 +1,4 @@
+
 trem-dmenuselect
 
 dependencies: dmenu, transmission-remote, zsh
@@ -6,21 +7,15 @@ on run presents a dmenu selection of running torrents, which can be selected for
 
 --------------------------------------------
 
-yts-torrent # changed to yts
-
-dependemcies: dmenu, transmission-remote
-
-on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
-downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
-
---------------------------------------------
-
-yts # v0.2b
+yts # v0.3b
 
 dependencies: curl, transmission-remote-cli
 
 terminal based torrent search script. Now able to chagne search values (Date, rating, sort)
 BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
+
+usage: yts [option]           general search
+<movie name>                  searches for specified name
 
 BUGS: changing language requires additional tweaking. Currently makes all movie names look like selected language.
 Otherwise still works.
@@ -41,3 +36,12 @@ wifi-dmenu # unused
 dependencies: nmcli, dmenu
 
 loads avaliable wifi networks for you to connect to
+
+--------------------------------------------
+
+yts-torrent # changed to yts
+
+dependemcies: dmenu, transmission-remote
+
+on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
+downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
