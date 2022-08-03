@@ -22,6 +22,15 @@ Otherwise still works.
 
 --------------------------------------------
 
+scraptpb.py
+
+dependencies: python, requests, os, json, urllib, transmission-remote
+
+scraps tpb for top movie torrents, returns size seeders leechers and name
+sends magnet to transmission-remote for download
+
+--------------------------------------------
+
 brightness # unused
 
 dependencies: xrandr
