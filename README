@@ -26,6 +26,9 @@ scraptpb.py
 
 dependencies: python, requests, os, json, urllib, transmission-remote
 
+usage: python scraptpb.py [name]    general search
+python scraptpb.py                  top 100 movies
+
 scraps tpb for top movie torrents, returns size seeders leechers and name
 sends magnet to transmission-remote for download
 

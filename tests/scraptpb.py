@@ -2,20 +2,21 @@ import requests
 import os
 import json
 import urllib
+import sys
+import re
 
 # TODO
 # add variety to url options
 # allow for term search
 # make trem silent
 
-
 # adds trailing white spaces for better viewing
 def numbers_and_whitespace(number,size):
-    i=10**size
+    i=size
     space=""
-    while (i > number):
+    while (i > len(str(number))):
         space+=" "
-        i/=10
+        i-=1
     return (str(number)+space)
 
 #converts data to magnet link
@@ -30,22 +31,25 @@ def get_magnet(info_hash,name):
             +endMag)
     return m
 
-
 url="https://apibay.org/precompiled/data_top100_201.json"
-name=input("name:")
-url="https://apibay.org/q.php?q="+urllib.parse.quote(name)+"&cat=0"
-print(url)
+if (len(sys.argv) > 1):
+    url="https://apibay.org/q.php?q="+urllib.parse.quote(re.sub(r'^.*? ','',' '.join(sys.argv)))+"&cat=0.json"
+
 page=requests.get(url).text
 data=json.loads(page)
 
-print("GB    | seeders | leechers | id | name")
+length=10
+if (len(data) < 10 ):
+    length=len(data)
+
+print("GB      | seeders | leechers | id | name")
 print("----------------------------------------")
-for x in range(0,10):
-    size=int(data[x]['size'])/1073741824
-    print(("%.3f" % size) + " | "+
-            numbers_and_whitespace(data[x]['seeders'],6)+ " | "+
-            numbers_and_whitespace(data[x]['leechers'],7)+ " | "+
-            numbers_and_whitespace(x+1,1)+ " | "+
+for x in range(0,length):
+    size=round(int(data[x]['size'])/1073741824,2)
+    print(  numbers_and_whitespace( size,7)        + " | "+
+            numbers_and_whitespace( data[x]['seeders'],7)   + " | "+
+            numbers_and_whitespace( data[x]['leechers'],8)  + " | "+
+            numbers_and_whitespace( x+1,2)                  + " | "+
             data[x]['name'])
 
 movie_id=int(input("enter movie id: "))
