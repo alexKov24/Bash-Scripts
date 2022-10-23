@@ -9,15 +9,14 @@ on run presents a dmenu selection of running torrents, which can be selected for
 
 yts # v0.3b
 
-dependencies: curl, transmission-remote-cli
+dependencies: curl, transmission-remote-cli, internet connection
 
-terminal based torrent search script. Now able to chagne search values (Date, rating, sort)
+terminal based scraper of YTS (https://yts.mx/). Now able to chagne search values (Date, rating, sort)
 BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
-usage: yts [option]           general search
-<movie name>                  searches for specified name
+usage: yts [movie name]           search string is optional
 
-BUGS: changing language requires additional tweaking. Currently makes all movie names look like selected language.
+BUGS: changing language requires additional tweaking.
 Otherwise still works.
 
 --------------------------------------------
