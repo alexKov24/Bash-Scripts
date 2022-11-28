@@ -1,0 +1,9 @@
+#!/bin/sh
+# shift ctrl p = pen
+# shift ctrl e = eraser
+# shift ctrl r = selsct rectangel
+# ctrl 2 = draw rectangle
+xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 1 "key +shift +ctrl p -ctrl -shift"
+xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 9 "key +shift +ctrl e -ctrl -shift"
+xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 8 "key +ctrl 2 -ctrl"
+xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 3 "key +shift +ctrl r -ctrl -shift"
