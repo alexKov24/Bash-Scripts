@@ -1,9 +1,15 @@
 #!/bin/sh
 # shift ctrl p = pen
+pen="key +shift +ctrl p -ctrl -shift"
 # shift ctrl e = eraser
+eraser="key +shift +ctrl e -ctrl -shift"
 # shift ctrl r = selsct rectangel
+select="key +ctrl 2 -ctrl"
 # ctrl 2 = draw rectangle
-xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 1 "key +shift +ctrl p -ctrl -shift"
-xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 9 "key +shift +ctrl e -ctrl -shift"
-xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 8 "key +ctrl 2 -ctrl"
-xsetwacom set "Wacom Bamboo 16FG 4x5 Pad pad" Button 3 "key +shift +ctrl r -ctrl -shift"
+draw="key +shift +ctrl r -ctrl -shift"
+# Wacom Bamboo 16FG 4x5 Pad pad
+device="$(xsetwacom list devices | grep "pad" | sed "s/   .*//g")"
+xsetwacom set "$device" Button 1 $pen
+xsetwacom set "$device" Button 9 $eraser
+xsetwacom set "$device" Button 8 $select
+xsetwacom set "$device" Button 3 $draw
