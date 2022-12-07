@@ -1,8 +1,7 @@
+# trem-dmenuselect
 
-## trem-dmenuselect
------------------
 
-**dependemcies**
+## dependemcies
 >dmenu
 >transmission-remote
 >zsh
@@ -10,29 +9,32 @@
 on run presents a dmenu selection of running torrents, which can be selected for further action (stop, start, remove).
 
 
-
-## yts v0.3b
------------------
-
-**dependemcies**
->curl
->transmission-remote-cli
->internet connection
+# yts v0.3b
 
 terminal based scraper of YTS (https://yts.mx/). Now able to chagne search values (Date, rating, sort)
 BASED ON SCRIPT BY Newman Sanchez (https://github.com/lr-tech)
 
-**usage**
->yts [movie name]           search string is optional
+## dependemcies
+>curl
+>transmission-remote-cli
+>internet connection
 
-BUGS: changing language requires additional tweaking.
+### usage
+```bash
+yts [movie name]           #search string is optional
+```
+
+### known issues
+changing language requires additional tweaking.
 Otherwise still works.
 
 
-## scraptpb.py
------------------
+# scraptpb.py
 
-**dependemcies**
+scraps tpb for top movie torrents, returns size seeders leechers and name
+sends magnet to transmission-remote for download
+k
+## dependemcies
 >python
 >requests
 >os
@@ -40,44 +42,45 @@ Otherwise still works.
 >urllib
 >transmission-remote
 
-**usage**
->python scraptpb.py [name]    general search
->python scraptpb.py                  top 100 movies
+### usage
+```python
+python scraptpb.py [name]           //general search
+python scraptpb.py                  //top 100 movies
+```
 
-scraps tpb for top movie torrents, returns size seeders leechers and name
-sends magnet to transmission-remote for download
 
 
-## brightness (unused)
------------------
-
-**dependemcies**
-> xrandr
+# brightness (unused)
 
 changes brightness of connected screen. brightness + (adds) brightness - (subtracts)
 
-## wifi-dmenu (unused)
------------------
+## dependemcies
+> xrandr
 
-dependencies: nmcli, dmenu
+
+# wifi-dmenu (unused)
 
 loads avaliable wifi networks for you to connect to
 
-## yts-torrent (changed to yts)
------------------
-
-**dependemcies**
+## dependencies
+> nmcli
 > dmenu
-> transmission-remote
+
+
+# yts-torrent (changed to yts)
 
 on run searches yts for new movies (In future, filters are to be implimented). Found movies can be
 downloaded or their trailer watched through default browser ($BROWSER) (might be changed to mpv in the future)
 
+## dependemcies
+> dmenu
+> transmission-remote
 
-## android-uninstaller
------------------
 
-**dependemcies**
-> adb
+
+# android-uninstaller
 
 simple bash script that searches and removes a package with adb
+
+## dependemcies
+> adb
