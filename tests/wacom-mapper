@@ -9,7 +9,9 @@ select="key +ctrl 2 -ctrl"
 draw="key +shift +ctrl r -ctrl -shift"
 # Wacom Bamboo 16FG 4x5 Pad pad
 device="$(xsetwacom list devices | grep "pad" | sed "s/   .*//g")"
-xsetwacom set $device Button 1 $pen
-xsetwacom set $device Button 9 $eraser
-xsetwacom set $device Button 8 $select
-xsetwacom set $device Button 3 $draw
+xsetwacom set "$device" Button 1 $pen
+xsetwacom set "$device" Button 9 $eraser
+xsetwacom set "$device" Button 8 $select
+xsetwacom set "$device" Button 3 $draw
+
+xsetwacom set "Wacom Bamboo 16FG 4x5 Pen stylus" Button 2 "key +ctrl c v -ctrl"

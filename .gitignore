@@ -5,6 +5,7 @@ construction-model-mp3/
 cron/
 exp-scripts/
 psy-cutter/
+private/
 booksplit
 compiler
 displayselect
@@ -45,6 +46,3 @@ transadd
 trem-dmenuselect
 tutorialvids
 unix
-prn
-eroscrape
-xvideos-dl
