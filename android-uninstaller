@@ -1,0 +1,38 @@
+#!bin/sh
+
+# running=Y
+# while [[ $running == "Y" ]]
+# do
+    if [[ ! -z $1 ]]
+    then
+        name=$1
+    else
+       echo "search package:" & read name
+    fi
+
+    list=($(adb shell pm list packages | grep "$name" | sed "s/package://g"))
+
+        id=1
+        for i in "${list[@]}"
+        do
+            echo $id $i
+            id=$((id+1))
+        done
+
+    echo "select id to delete"
+    read id
+    package=${list[$((id-1))]}
+
+    echo "delete package $package Y/n"
+    read delete
+
+        if [[ $delete == "Y" ]]
+        then
+            adb shell pm uninstall -k --user 0 $package
+        else
+            echo "not deleted"
+        fi
+
+    # echo "continue? Y/n"
+    # read running
+# done
